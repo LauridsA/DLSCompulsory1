@@ -5,8 +5,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using PrimeCorrectnessService;
 
-namespace PrimeCalculator.Controllers
+namespace Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -21,58 +22,20 @@ namespace PrimeCalculator.Controllers
         }
 
         [HttpGet]
-        [Route("getPrime/{from}/{to}")]
+        [Route("{from}/{to}")]
         public ActionResult<string> GetPrime([FromRoute]int from, [FromRoute]int to)
         {
+            PrimeCorrectness primeChecker = new PrimeCorrectness();
+
             //log request
             DumpToFile(from.ToString(), to.ToString(), "Request received, beginning calculation");
             //perform calculation
-            string res = CountPrimes(from.ToString(), to.ToString());
+            string res = primeChecker.CountPrimes(from.ToString(), to.ToString());
             //log result
             DumpToFile(res, null, "Calculation performed. Result below");
             //return result
             return res;
         }
-
-        private string CountPrimes(string from, string to)
-        {
-            try
-            {
-                int fromAsInt = int.Parse(from);
-                int toAsInt = int.Parse(to);
-                string faggot = "";
-                while (fromAsInt <= toAsInt)
-                {
-                    if (IsPrime(fromAsInt.ToString()))
-                        faggot += $"{fromAsInt}, ";
-                }
-                fromAsInt++;
-                return faggot;
-            }
-            catch (Exception e)
-            {
-                return "im the nigger";
-            }
-        }
-
-        private bool IsPrime(string check)
-        {
-            try
-            {
-                int checkFor = int.Parse(check);
-
-                for (int counter = 2; counter < checkFor; counter++)
-                    if (checkFor % counter == 0)
-                        return false;
-                return true;
-            }
-            catch (Exception e)
-            {
-                // Log.Error("Not a prime");
-                return false;
-            }
-        }
-
 
         private void DumpToFile(string parameter1, string parameter2, string message = null)
         {

@@ -1,0 +1,34 @@
+
+TimeStamp: 
+27-02-2020 19:00:47
+message: Request received, beginning calculation
+parameter 1: 5
+parameter 2: 8
+
+TimeStamp: 
+27-02-2020 19:02:16
+message: Request received, beginning calculation
+parameter 1: 1
+parameter 2: 2
+
+TimeStamp: 
+27-02-2020 19:03:18
+message: Request received, beginning calculation
+parameter 1: 10
+parameter 2: 15
+
+TimeStamp: 
+27-02-2020 19:03:18
+message: Calculation performed. Result below
+parameter 1: 11, 13, 
+
+TimeStamp: 
+27-02-2020 19:03:28
+message: Request received, beginning calculation
+parameter 1: 10
+parameter 2: 150
+
+TimeStamp: 
+27-02-2020 19:03:28
+message: Calculation performed. Result below
+parameter 1: 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 
