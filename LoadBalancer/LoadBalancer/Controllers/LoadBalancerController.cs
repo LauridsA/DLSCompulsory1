@@ -82,7 +82,6 @@ namespace LoadBalancer.Controllers
                 {
                     currentContent = sr.ReadToEnd();
                 }
-                return currentContent;
             }
             return currentContent;
         }

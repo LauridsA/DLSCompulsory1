@@ -62,7 +62,6 @@ namespace Controllers
                 {
                     currentContent = sr.ReadToEnd();
                 }
-                return currentContent;
             }
             return currentContent;
         }
