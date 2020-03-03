@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RestSharp;
 
 namespace LoadBalancer.Controllers
 {
@@ -13,16 +14,17 @@ namespace LoadBalancer.Controllers
     public class LoadBalancerController : ControllerBase
     {
         private string outputFolder = Directory.GetCurrentDirectory();
+        IRestClient restClient;
         private List<string> services = new List<string>()
         {
-            "Service1",
-            "Service2",
-            "Service3"
+            @"https://localhost:44331/",
+            @"https://localhost:44331/",
+            @"https://localhost:44331/"
         };
         private int counter = 0;
         public LoadBalancerController()
         {
-            //empty lol
+            restClient = new RestClient();
         }
 
         [HttpGet]
@@ -45,13 +47,16 @@ namespace LoadBalancer.Controllers
             var serviceToChoose = services[counter];
             DumpToFile(serviceToChoose, null, "Service Chosen:");
             //Passthrough request
-
+            restClient.BaseUrl = new Uri(serviceToChoose);
+            var request = new RestRequest("primenumber/" + from+ "/" + to, Method.GET);
+            //request.AddParameter("from", from);
+            //request.AddParameter("to", to);
             //get result
-
+            var res = restClient.Execute(request);
             //log result
-
+            DumpToFile(res.Content, null, "Service Response:");
             //return result
-            return "Frontpage/health endpoint";
+            return res.Content;
         }
 
 
