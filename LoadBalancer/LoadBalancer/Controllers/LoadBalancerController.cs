@@ -42,19 +42,16 @@ namespace LoadBalancer.Controllers
             //choose next in line -- round robin
             if (counter == services.Count)
                 counter = 0;
-            else
-                counter++;
             var serviceToChoose = services[counter];
             DumpToFile(serviceToChoose, null, "Service Chosen:");
             //Passthrough request
             restClient.BaseUrl = new Uri(serviceToChoose);
             var request = new RestRequest("primenumber/" + from+ "/" + to, Method.GET);
-            //request.AddParameter("from", from);
-            //request.AddParameter("to", to);
             //get result
             var res = restClient.Execute(request);
             //log result
             DumpToFile(res.Content, null, "Service Response:");
+            counter++;
             //return result
             return res.Content;
         }
