@@ -37,6 +37,7 @@ namespace LoadBalancer.Controllers
         [Route("{from}/{to}")]
         public string HandleRequest([FromRoute]int from, [FromRoute]int to)
         {
+            counter++;
             //log request
             DumpToFile(from.ToString(), to.ToString(), "Request Recieved. Passing it along to next service.");
             //choose next in line -- round robin
@@ -51,7 +52,6 @@ namespace LoadBalancer.Controllers
             var res = restClient.Execute(request);
             //log result
             DumpToFile(res.Content, null, "Service Response:");
-            counter++;
             //return result
             return res.Content;
         }
