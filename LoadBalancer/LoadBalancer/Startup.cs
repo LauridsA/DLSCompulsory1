@@ -22,6 +22,7 @@ namespace LoadBalancer
             Configuration = configuration;
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.File("Logs/"+StartUpTimeStamp+"_log.txt")
+                .WriteTo.Console()
                 .CreateLogger();
         }
 

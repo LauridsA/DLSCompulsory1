@@ -26,7 +26,7 @@ namespace Controllers
         [Route("{from}/{to}")]
         public ActionResult<string> GetPrime([FromRoute]int from, [FromRoute]int to)
         {
-            var guid = Guid.NewGuid();
+            string guid = Guid.NewGuid().ToString();
             PrimeCorrectness primeChecker = new PrimeCorrectness();
 
             //log request
