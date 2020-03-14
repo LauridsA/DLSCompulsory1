@@ -27,6 +27,13 @@ namespace LoadBalancer.Controllers
         {
             restClient = new RestClient();
         }
+        public string RoundRobin()
+        {
+            counter++;
+            if (counter == services.Count)
+                counter = 0;
+            return services[counter];
+        }
 
         [HttpGet]
         public string Get()
