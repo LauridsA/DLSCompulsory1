@@ -37,13 +37,10 @@ namespace LoadBalancer.Controllers
         [Route("{from}/{to}")]
         public string HandleRequest([FromRoute]int from, [FromRoute]int to)
         {
-            counter++;
             //log request
             DumpToFile(from.ToString(), to.ToString(), "Request Recieved. Passing it along to next service.");
             //choose next in line -- round robin
-            if (counter == services.Count)
-                counter = 0;
-            var serviceToChoose = services[counter];
+            var serviceToChoose = RoundRobin();
             DumpToFile(serviceToChoose, null, "Service Chosen:");
             //Passthrough request
             restClient.BaseUrl = new Uri(serviceToChoose);
@@ -56,6 +53,13 @@ namespace LoadBalancer.Controllers
             return res.Content;
         }
 
+        public string RoundRobin()
+        {
+            counter++;
+            if (counter == services.Count)
+                counter = 0;
+            return services[counter];
+        }
 
         private void DumpToFile(string parameter1, string parameter2, string message = null)
         {
