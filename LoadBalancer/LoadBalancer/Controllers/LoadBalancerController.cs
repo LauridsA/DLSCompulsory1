@@ -31,8 +31,11 @@ namespace LoadBalancer.Controllers
         {
             counter++;
             if (counter == services.Count)
+            {
                 counter = 0;
-            return services[counter];
+                return services[services.Count - 1];
+            }
+            return services[counter-1];
         }
 
         [HttpGet]
@@ -48,6 +51,7 @@ namespace LoadBalancer.Controllers
             var guid = new Guid();
             //log request
             //choose next in line -- round robin
+            
             var serviceToChoose = RoundRobin();
             Log.Information($"REQID: {guid} {Environment.NewLine} fromInput: {from.ToString()} {Environment.NewLine} toinput: {to.ToString()} {Environment.NewLine} Request received. Sent to service {serviceToChoose}.");
 
@@ -61,14 +65,6 @@ namespace LoadBalancer.Controllers
 
             //return result
             return res.Content;
-        }
-
-        public string RoundRobin()
-        {
-            counter++;
-            if (counter == services.Count)
-                counter = 0;
-            return services[counter];
         }
     }
 }
