@@ -53,7 +53,7 @@ namespace LoadBalancer.Controllers
             //choose next in line -- round robin
             
             var serviceToChoose = RoundRobin();
-            Log.Information($"REQID: {guid} {Environment.NewLine} fromInput: {from.ToString()} {Environment.NewLine} toinput: {to.ToString()} {Environment.NewLine} Request received. Sent to service {serviceToChoose}.");
+            Log.Information($"REQID: {guid} {Environment.NewLine}fromInput: {from.ToString()} {Environment.NewLine}toinput: {to.ToString()} {Environment.NewLine}Request received. Sent to service {serviceToChoose} {Environment.NewLine} {Environment.NewLine} ");
 
             //Passthrough request
             restClient.BaseUrl = new Uri(serviceToChoose);
@@ -61,7 +61,7 @@ namespace LoadBalancer.Controllers
             //get result
             var res = restClient.Execute(request);
             //log result
-            Log.Information($"REQID: {guid} response received: {res.Content} from service {serviceToChoose}.");
+            Log.Information($"REQID: {guid} response received: {res.Content} from service {serviceToChoose} {Environment.NewLine} {Environment.NewLine} " );
 
             //return result
             return res.Content;
