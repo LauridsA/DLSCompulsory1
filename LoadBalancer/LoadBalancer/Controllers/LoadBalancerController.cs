@@ -48,7 +48,7 @@ namespace LoadBalancer.Controllers
         [Route("{from}/{to}")]
         public string HandleRequest([FromRoute]int from, [FromRoute]int to)
         {
-            var guid = new Guid();
+            var guid = Guid.NewGuid();
             //log request
             //choose next in line -- round robin
             
