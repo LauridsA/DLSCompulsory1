@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RestSharp;
+using Serilog;
 
 namespace LoadBalancer.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class LoadBalancerController : ControllerBase
     {
@@ -17,11 +18,11 @@ namespace LoadBalancer.Controllers
         IRestClient restClient;
         private List<string> services = new List<string>()
         {
-            @"https://localhost:44331/",
-            @"https://localhost:44331/",
-            @"https://localhost:44331/"
+            @"http://localhost:51294/",
+            @"http://localhost:51295/",
+            @"http://localhost:51296/"
         };
-        private int counter = 0;
+        private static int counter = 0;
         public LoadBalancerController()
         {
             restClient = new RestClient();
@@ -37,18 +38,20 @@ namespace LoadBalancer.Controllers
         [Route("{from}/{to}")]
         public string HandleRequest([FromRoute]int from, [FromRoute]int to)
         {
+            var guid = new Guid();
             //log request
-            DumpToFile(from.ToString(), to.ToString(), "Request Recieved. Passing it along to next service.");
             //choose next in line -- round robin
             var serviceToChoose = RoundRobin();
-            DumpToFile(serviceToChoose, null, "Service Chosen:");
+            Log.Information($"REQID: {guid} {Environment.NewLine} fromInput: {from.ToString()} {Environment.NewLine} toinput: {to.ToString()} {Environment.NewLine} Request received. Sent to service {serviceToChoose}.");
+
             //Passthrough request
             restClient.BaseUrl = new Uri(serviceToChoose);
-            var request = new RestRequest("primenumber/" + from+ "/" + to, Method.GET);
+            var request = new RestRequest("primenumber/" + from + "/" + to, Method.GET);
             //get result
             var res = restClient.Execute(request);
             //log result
-            DumpToFile(res.Content, null, "Service Response:");
+            Log.Information($"REQID: {guid} response received: {res.Content} from service {serviceToChoose}.");
+
             //return result
             return res.Content;
         }
@@ -59,35 +62,6 @@ namespace LoadBalancer.Controllers
             if (counter == services.Count)
                 counter = 0;
             return services[counter];
-        }
-
-        private void DumpToFile(string parameter1, string parameter2, string message = null)
-        {
-            string currentContent = ReadFromFile();
-            using (StreamWriter sw = new StreamWriter(outputFolder + "Failsafe.txt"))
-            {
-                string logstring = currentContent + "\n" + "TimeStamp: " + "\n" + DateTime.Now.ToString() + "\n";
-                if (message != null)
-                    logstring += "message: " + message + "\n";
-                if (parameter1 != null)
-                    logstring += "parameter 1: " + parameter1 + "\n";
-                if (parameter2 != null)
-                    logstring += "parameter 2: " + parameter2 + "\n";
-                sw.Write(logstring);
-            }
-        }
-
-        private string ReadFromFile()
-        {
-            string currentContent = "";
-            if (System.IO.File.Exists(outputFolder + "Failsafe.txt"))
-            {
-                using (StreamReader sr = new StreamReader(outputFolder + "Failsafe.txt"))
-                {
-                    currentContent = sr.ReadToEnd();
-                }
-            }
-            return currentContent;
         }
     }
 }
