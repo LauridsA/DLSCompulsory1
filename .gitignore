@@ -2,3 +2,5 @@
 LoadBalancer/.vs
 **/[Bb]in
 **/[Oo]bj
+/LoadBalancer/LoadBalancerFailsafe.txt
+/PrimeCalculator/PrimeCalculatorFailsafe.txt
